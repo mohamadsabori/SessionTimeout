@@ -9,11 +9,14 @@ import org.ehcache.config.units.MemoryUnit;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Logger;
 
 public class SessionManager {
     private static SessionManager instance;
     private Cache<String, String> sessionCache;
     private final long TIMEOUT = 15 * 60 * 1000; // 15 minutes in milliseconds
+
+    private static final Logger logger = Logger.getLogger(SessionManager.class.getName());
 
     private SessionManager() {
         CacheManager cacheManager = CacheManagerBuilder.newCacheManagerBuilder().build();
@@ -54,20 +57,37 @@ public class SessionManager {
     }
 
     public static void main(String[] args) {
+        String sessionIds = getSessionIdsFromParameter(args);
         SessionManager sessionManager = SessionManager.getInstance();
-        sessionManager.startSession("12345");
+        sessionManager.startSession(sessionIds);
 
-        System.out.println("Is session active? " + sessionManager.isSessionActive("12345"));
+        logger.info("Is session active? " + sessionManager.isSessionActive(sessionIds));
 
-        // Simulate session timeout after 30 minutes
         try {
-            Thread.sleep(30 * 60 * 1000); // 30 minutes in milliseconds
+            Thread.sleep(30 * 60 * 1000);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            logger.severe("An error occurred: " + e.getMessage());
+            logger.severe("Stack trace: ");
+            for (StackTraceElement element : e.getStackTrace()) {
+                logger.severe(element.toString());
+            }
         }
 
         System.out.println("Is session active? " + sessionManager.isSessionActive("12345"));
 
         sessionManager.endSession("12345");
+    }
+
+    private static String getSessionIdsFromParameter(String[] args) {
+        if (args.length > 0) {
+            logger.info("Command-line arguments:");
+            for (int i = 0; i < args.length; i++) {
+                logger.info("Argument " + (i + 1) + ": " + args[i]);
+            }
+            return args[0];
+        } else {
+            logger.warning("No command-line arguments provided.");
+            return "12345";
+        }
     }
 }
