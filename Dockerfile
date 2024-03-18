@@ -5,7 +5,7 @@ FROM openjdk:11
 WORKDIR /usr/src/app
 
 # Copy the JAR file from the target directory to the container
-COPY target/your-project-name.jar ./app.jar
+COPY target/sessionTimeout-1.0-SNAPSHOT.jar ./sessionTimeout-1.0-SNAPSHOT.jar
 
 # Set the entry point command to run the Java application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "sessionTimeout-1.0-SNAPSHOT.jar"]
