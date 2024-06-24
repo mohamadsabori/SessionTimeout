@@ -72,13 +72,9 @@ public class SessionManager {
                 logger.severe(element.toString());
             }
         }
-
-        System.out.println("Is session active? " + sessionManager.isSessionActive("12345"));
-
-        sessionManager.endSession("12345");
     }
 
-    private static String getSessionIdsFromParameter(String[] args) {
+    public static String getSessionIdsFromParameter(String[] args) {
         if (args.length > 0) {
             logger.info("Command-line arguments:");
             for (int i = 0; i < args.length; i++) {
